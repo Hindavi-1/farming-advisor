@@ -1,86 +1,169 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-scroll";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { FaBars, FaTimes, FaMoon, FaSun } from "react-icons/fa";
+import "./styles/navbar.css"; // Importing the CSS file
 
 const Navbar = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  const [scrolling, setScrolling] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolling(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    document.body.className = theme;
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
 
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full px-6 py-4 z-50 transition-all duration-300 ${
-        scrolling ? "bg-white shadow-lg dark:bg-gray-900" : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Logo */}
-        <Link
-          to="home"
-          smooth={true}
-          className="text-xl font-bold cursor-pointer"
-        >
-          Farming AI 🌿
-        </Link>
+    <nav className="navbar">
+      <div className="nav-container">
+        <h1 className="logo">FarmingAI</h1>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-6">
-          {["home", "about", "features", "dashboard", "blog", "contact"].map(
-            (item) => (
-              <Link
-                key={item}
-                to={item}
-                smooth={true}
-                className="cursor-pointer hover:text-green-500 transition"
-              >
-                {item.charAt(0).toUpperCase() + item.slice(1)}
-              </Link>
-            )
-          )}
-        </div>
+        {/* Menu Items */}
+        <ul className={menuOpen ? "nav-links open" : "nav-links"}>
+          <li>
+            <a href="#home">Home</a>
+          </li>
+          <li>
+            <a href="#about">About Us</a>
+          </li>
+          <li>
+            <a href="#features">Features</a>
+          </li>
+          <li>
+            <a href="#dashboard">Dashboard</a>
+          </li>
+          <li>
+            <a href="#blog">Blog</a>
+          </li>
+          <li>
+            <a href="#contact">Contact</a>
+          </li>
+        </ul>
 
-        {/* Right Section */}
-        <div className="flex items-center space-x-4">
-          {/* Theme Toggle */}
-          <button onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+        {/* Theme Toggle & Mobile Menu Button */}
+        <div className="nav-icons">
+          <button className="theme-toggle" onClick={toggleTheme}>
+            {theme === "light" ? <FaMoon /> : <FaSun />}
           </button>
-
-          {/* Mobile Menu Button */}
-          <button className="md:hidden" onClick={() => setIsMobile(!isMobile)}>
-            {isMobile ? <X size={24} /> : <Menu size={24} />}
+          <button
+            className="menu-toggle"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isMobile && (
-        <div className="md:hidden flex flex-col items-center space-y-4 mt-4">
-          {["home", "about", "features", "dashboard", "blog", "contact"].map(
-            (item) => (
-              <Link
-                key={item}
-                to={item}
-                smooth={true}
-                className="cursor-pointer hover:text-green-500 transition"
-                onClick={() => setIsMobile(false)}
-              >
-                {item.charAt(0).toUpperCase() + item.slice(1)}
-              </Link>
-            )
-          )}
-        </div>
-      )}
     </nav>
   );
 };
 
 export default Navbar;
+
+// import React, { useState, useEffect } from "react";
+// import {
+//   FaBars,
+//   FaTimes,
+//   FaMoon,
+//   FaSun,
+//   FaSeedling,
+//   FaLeaf,
+// } from "react-icons/fa";
+// import "./styles/navbar.css";
+
+// const Navbar = () => {
+//   const [menuOpen, setMenuOpen] = useState(false);
+//   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+//   const [scrolled, setScrolled] = useState(false);
+//   const [activeLink, setActiveLink] = useState("home");
+
+//   useEffect(() => {
+//     document.body.className = theme;
+//     localStorage.setItem("theme", theme);
+//   }, [theme]);
+
+//   useEffect(() => {
+//     const handleScroll = () => {
+//       if (window.scrollY > 50) {
+//         setScrolled(true);
+//       } else {
+//         setScrolled(false);
+//       }
+//     };
+
+//     // Add scroll event listener
+//     window.addEventListener("scroll", handleScroll);
+
+//     // Cleanup
+//     return () => window.removeEventListener("scroll", handleScroll);
+//   }, []);
+
+//   const toggleTheme = () => {
+//     setTheme(theme === "light" ? "dark" : "light");
+//   };
+
+//   const handleNavClick = (link) => {
+//     setActiveLink(link);
+//     setMenuOpen(false);
+//   };
+
+//   return (
+//     <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
+//       <div className="nav-container">
+//         <div className="logo-container">
+//           <FaSeedling className="logo-icon" />
+//           <h1 className="logo">
+//             Farming<span className="highlight">AI</span>
+//           </h1>
+//         </div>
+
+//         <ul className={menuOpen ? "nav-links open" : "nav-links"}>
+//           {[
+//             { id: "home", label: "Home" },
+//             { id: "about", label: "About Us" },
+//             { id: "features", label: "Features" },
+//             { id: "dashboard", label: "Dashboard" },
+//             { id: "blog", label: "Blog" },
+//             { id: "contact", label: "Contact" },
+//           ].map((item) => (
+//             <li
+//               key={item.id}
+//               className={activeLink === item.id ? "active" : ""}
+//             >
+//               <a
+//                 href={`#${item.id}`}
+//                 onClick={() => handleNavClick(item.id)}
+//                 className="nav-link"
+//               >
+//                 {item.label}
+//                 <span className="link-indicator"></span>
+//               </a>
+//             </li>
+//           ))}
+//         </ul>
+
+//         <div className="nav-right">
+//           <button
+//             className="theme-toggle"
+//             onClick={toggleTheme}
+//             aria-label="Toggle theme"
+//           >
+//             <div className="toggle-track">
+//               <div className={`toggle-thumb ${theme === "dark" ? "dark" : ""}`}>
+//                 {theme === "light" ? <FaSun /> : <FaMoon />}
+//               </div>
+//             </div>
+//           </button>
+
+//           <button
+//             className="menu-toggle"
+//             onClick={() => setMenuOpen(!menuOpen)}
+//           >
+//             {menuOpen ? <FaTimes /> : <FaBars />}
+//           </button>
+//         </div>
+//       </div>
+//     </nav>
+//   );
+// };
