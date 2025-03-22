@@ -1,11 +1,18 @@
 import Navbar from "../components/HomePage/Navbar";
-import Hero from "../components/HomePage/Hero";
 import DynamicHero from "../components/HomePage/DynamicHero";
+import HowItWorks from "../components/HomePage/HowItWorks";
+import BenefitsSection from "../components/HomePage/BenefitsSection";
+import FAQ from "../components/HomePage/FAQ";
+import Footer from "../components/HomePage/Footer";
 export default function Homepage() {
   return (
     <>
       <Navbar />
       <DynamicHero />
+      <HowItWorks />
+      <BenefitsSection />
+      <FAQ />
+      <Footer />
     </>
   );
 }

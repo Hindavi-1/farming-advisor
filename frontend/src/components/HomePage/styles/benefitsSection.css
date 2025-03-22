@@ -1,0 +1,215 @@
+/* styles/BenefitsSection.css */
+.benefits-section {
+  padding: 80px 0;
+  background-color: var(--bg-color);
+  transition: background-color 0.3s ease;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: var(--text-color);
+  margin-bottom: 60px;
+  position: relative;
+}
+
+.section-title:after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background-color: var(--primary-color);
+  margin: 15px auto 0;
+  transition: background-color 0.3s ease;
+}
+
+.benefits-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 60px;
+}
+
+.benefit-card {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  padding: 30px;
+  width: 30%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    background-color 0.3s ease;
+  border-top: 5px solid transparent;
+}
+
+body.dark .benefit-card {
+  background-color: #2d2d2d;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.benefit-card:nth-child(1) {
+  border-top-color: #4caf50; /* Green for crop */
+}
+
+.benefit-card:nth-child(2) {
+  border-top-color: #2196f3; /* Blue for water */
+}
+
+.benefit-card:nth-child(3) {
+  border-top-color: #ff9800; /* Orange for fertilizer */
+}
+
+body.dark .benefit-card:nth-child(3) {
+  border-top-color: var(
+    --primary-color
+  ); /* Use primary-color in dark mode for fertilizer */
+}
+
+.benefit-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+body.dark .benefit-card:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.benefit-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.crop-icon {
+  color: #4caf50;
+}
+
+.water-icon {
+  color: #2196f3;
+}
+
+.fertilizer-icon {
+  color: #ff9800;
+}
+
+body.dark .fertilizer-icon {
+  color: var(--primary-color);
+}
+
+.benefit-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefits-list li {
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 15px;
+  color: var(--text-color);
+  opacity: 0.8;
+  line-height: 1.6;
+  transition: color 0.3s ease;
+}
+
+.benefits-list li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.benefit-highlight {
+  font-weight: 700;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+.cta-container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.cta-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cta-button:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+body.dark .cta-button {
+  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+}
+
+body.dark .cta-button:hover {
+  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.3);
+}
+
+.cta-button:active {
+  transform: translateY(0);
+}
+
+.cta-subtext {
+  margin-top: 15px;
+  color: var(--text-color);
+  opacity: 0.7;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+@media (max-width: 992px) {
+  .benefits-container {
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .benefit-card {
+    width: 45%;
+  }
+}
+
+@media (max-width: 768px) {
+  .benefit-card {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .cta-button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    width: 90%;
+    max-width: 300px;
+  }
+}
