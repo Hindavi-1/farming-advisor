@@ -1,4 +1,3 @@
-import Navbar from "../components/HomePage/Navbar";
 import DynamicHero from "../components/HomePage/DynamicHero";
 import HowItWorks from "../components/HomePage/HowItWorks";
 import BenefitsSection from "../components/HomePage/BenefitsSection";
@@ -7,7 +6,6 @@ import Footer from "../components/HomePage/Footer";
 export default function Homepage() {
   return (
     <>
-      <Navbar />
       <DynamicHero />
       <HowItWorks />
       <BenefitsSection />

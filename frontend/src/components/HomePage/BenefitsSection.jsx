@@ -69,7 +69,7 @@ const BenefitsSection = () => {
           <button className="cta-button">
             Start optimizing your farm today
           </button>
-          <p className="cta-subtext">Begin with a free soil analysis</p>
+          <p className="cta-subtext"></p>
         </div>
       </div>
     </section>

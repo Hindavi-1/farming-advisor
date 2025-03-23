@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes, FaMoon, FaSun } from "react-icons/fa";
-import "./styles/navbar.css"; // Importing the CSS file
+import "./navbar.css"; // Importing the CSS file
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -23,22 +23,22 @@ const Navbar = () => {
         {/* Menu Items */}
         <ul className={menuOpen ? "nav-links open" : "nav-links"}>
           <li>
-            <a href="#home">Home</a>
+            <a href="/">Home</a>
           </li>
           <li>
-            <a href="#about">About Us</a>
+            <a href="/about-us">About Us</a>
           </li>
           <li>
-            <a href="#features">Features</a>
+            <a href="/features">Features</a>
           </li>
           <li>
-            <a href="#dashboard">Dashboard</a>
+            <a href="/dashboard">Dashboard</a>
           </li>
           <li>
-            <a href="#blog">Blog</a>
+            <a href="/blogs">Blog</a>
           </li>
           <li>
-            <a href="#contact">Contact</a>
+            <a href="/contact">Contact</a>
           </li>
         </ul>
 
