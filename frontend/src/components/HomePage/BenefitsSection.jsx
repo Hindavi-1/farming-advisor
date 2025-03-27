@@ -1,6 +1,6 @@
 // BenefitsSection.jsx
 import React from "react";
-import "./styles/BenefitsSection.css";
+import "./styles/benefitsSection.css";
 import { FaSeedling, FaTint, FaFlask } from "react-icons/fa";
 
 const BenefitsSection = () => {
