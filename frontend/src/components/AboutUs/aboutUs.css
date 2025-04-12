@@ -1,0 +1,358 @@
+/* About Us Page Styles */
+.about-container {
+  padding: 120px 5% 80px;
+  background: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+}
+
+.about-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.about-header h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  position: relative;
+  display: inline-block;
+}
+
+.highlight-text {
+  background: linear-gradient(90deg, var(--primary-color), #00c853);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about-subtitle {
+  font-size: 1.4rem;
+  max-width: 700px;
+  margin: 0 auto;
+  opacity: 0.8;
+}
+
+/* Mission Section */
+.about-mission {
+  display: flex;
+  margin-bottom: 80px;
+  gap: 50px;
+  align-items: center;
+}
+
+.mission-content {
+  flex: 1;
+}
+
+.mission-content h2 {
+  font-size: 2.4rem;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+.mission-content p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.mission-image {
+  flex: 1;
+}
+
+.image-container {
+  width: 100%;
+  height: 400px;
+  background-image: url("https://source.unsplash.com/random/800x600/?farm,technology");
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(49, 112, 179, 0.3),
+    rgba(0, 200, 83, 0.3)
+  );
+}
+
+/* Values Section */
+.about-values {
+  margin-bottom: 80px;
+}
+
+.about-values h2 {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: 40px;
+  color: var(--primary-color);
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.value-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.value-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.value-icon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+  height: 70px;
+  width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  background: rgba(49, 112, 179, 0.1);
+  border-radius: 50%;
+}
+
+.value-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+}
+
+.value-card p {
+  font-size: 1rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+/* Team Section */
+.about-team {
+  margin-bottom: 80px;
+}
+
+.about-team h2 {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+.team-intro {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 40px;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  opacity: 0.9;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 30px;
+}
+
+.team-member {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.team-member:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.member-image {
+  height: 200px;
+  background-color: #e9e9e9;
+  background-image: url("https://source.unsplash.com/random/300x300/?person");
+  background-size: cover;
+  background-position: center top;
+}
+
+.team-member h3 {
+  padding: 20px 20px 5px;
+  font-size: 1.3rem;
+}
+
+.member-title {
+  padding: 0 20px 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.member-bio {
+  padding: 0 20px 20px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* Our Story / Timeline */
+.about-story h2 {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: 40px;
+  color: var(--primary-color);
+}
+
+.story-timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding-left: 50px;
+}
+
+.story-timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 2px;
+  background: var(--primary-color);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -54px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  box-shadow: 0 0 0 5px rgba(49, 112, 179, 0.2);
+}
+
+.timeline-content h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: var(--primary-color);
+}
+
+.timeline-content p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .about-mission {
+    flex-direction: column;
+  }
+
+  .mission-image {
+    order: -1;
+    width: 100%;
+  }
+
+  .image-container {
+    height: 300px;
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-container {
+    padding: 100px 5% 60px;
+  }
+
+  .about-header h1 {
+    font-size: 2.5rem;
+  }
+
+  .about-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .mission-content h2,
+  .about-values h2,
+  .about-team h2,
+  .about-story h2 {
+    font-size: 2rem;
+  }
+
+  .image-container {
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-header h1 {
+    font-size: 2rem;
+  }
+
+  .about-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .mission-content h2,
+  .about-values h2,
+  .about-team h2,
+  .about-story h2 {
+    font-size: 1.8rem;
+  }
+
+  .value-icon {
+    font-size: 2rem;
+    height: 60px;
+    width: 60px;
+  }
+
+  .image-container {
+    height: 200px;
+  }
+
+  .story-timeline {
+    padding-left: 30px;
+  }
+
+  .timeline-marker {
+    left: -37px;
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* Dark Mode Adjustments */
+body.dark .value-card,
+body.dark .team-member {
+  background: rgba(30, 30, 30, 0.6);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark .value-icon {
+  background: rgba(74, 144, 226, 0.2);
+}
+
+body.dark .member-image {
+  background-color: #333;
+}
