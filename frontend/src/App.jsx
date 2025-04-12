@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import Features from "./pages/Features";
 import Contact from "./pages/Contact";
 // import Dashboard from "./pages/Dashboard";
+import AIAdvisor from "./pages/AIAdvisor";
 import Blog from "./pages/Blog";
 
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
