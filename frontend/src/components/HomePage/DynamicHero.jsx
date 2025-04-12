@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./styles/dynamicHero.css";
-import farmImage from "../../assets/image.png"; // Your farm image
+import farmImage from "../../assets/image.png"; // Your farm
 import {
   FaLeaf,
   FaCloudSun,
@@ -57,7 +57,7 @@ const DynamicHero = () => {
           </div>
         </div>
 
-        <button className="cta-button">
+        <button className="cta-button" onClick={() => navigate("/ai-advisor")}>
           Start Your AI Farm Advisor
           <span className="button-arrow">→</span>
         </button>
