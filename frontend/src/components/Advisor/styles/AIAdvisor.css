@@ -6,9 +6,12 @@
   color: var(--text-color);
   position: relative;
   overflow: hidden;
-  padding: 50px 10% 20px;
+  padding: 80px 10% 40px;
   margin-top: 60px; /* Account for navbar */
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 /* Re-use scanner effect from hero section */
@@ -64,8 +67,9 @@
 
 .model-cards {
   display: flex;
-  justify-content: space-between;
-  gap: 40px;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 20px;
   margin: 0 auto;
   max-width: 1200px;
 }
@@ -74,8 +78,8 @@
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border-radius: 16px;
-  padding: 25px;
-  width: calc(33.33% - 14px);
+  padding: 30px 25px;
+  width: calc(25% - 15px);
   min-width: 250px;
   text-align: center;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);

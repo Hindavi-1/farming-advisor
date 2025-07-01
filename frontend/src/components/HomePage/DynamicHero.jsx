@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./styles/dynamicHero.css";
 import farmImage from "../../assets/image.png"; // Your farm
 import {
@@ -7,9 +8,11 @@ import {
   FaTint,
   FaTemperatureHigh,
   FaSeedling,
+  FaCamera,
 } from "react-icons/fa";
 
 const DynamicHero = () => {
+  const navigate = useNavigate();
   const [animate, setAnimate] = useState(false);
   const [dataPoint, setDataPoint] = useState(0);
   const dataPoints = [
@@ -57,10 +60,18 @@ const DynamicHero = () => {
           </div>
         </div>
 
-        <button className="cta-button" onClick={() => navigate("/ai-advisor")}>
-          Start Your AI Farm Advisor
-          <span className="button-arrow">→</span>
-        </button>
+        <div className="cta-buttons">
+          <button className="cta-button primary" onClick={() => navigate("/ai-advisor")}>
+            Start Your AI Farm Advisor
+            <span className="button-arrow">→</span>
+          </button>
+          
+          <button className="cta-button secondary" onClick={() => navigate("/smart-scanner")}>
+            <FaCamera className="button-icon" />
+            Smart Plant Scanner
+            <span className="button-arrow">→</span>
+          </button>
+        </div>
       </div>
 
       <div className="hero-visual">
