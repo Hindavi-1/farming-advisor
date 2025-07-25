@@ -1,14 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './styles/SmartPlantScanner.css';
-import { FaCamera, FaLeaf, FaPrescriptionBottleAlt, FaExclamationTriangle } from 'react-icons/fa';
+import { FaCamera, FaLeaf, FaPrescriptionBottleAlt, FaExclamationTriangle, FaUpload, FaTimes, FaRedo } from 'react-icons/fa';
 
 const SmartPlantScanner = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const fileInputRef = useRef(null);
+  const dropZoneRef = useRef(null);
   const [isScanning, setIsScanning] = useState(false);
   const [detectedDisease, setDetectedDisease] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [dragActive, setDragActive] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
   
   // Start camera when component mounts
   useEffect(() => {
@@ -18,6 +23,52 @@ const SmartPlantScanner = () => {
         const tracks = videoRef.current.srcObject.getTracks();
         tracks.forEach(track => track.stop());
       }
+    };
+  }, []);
+
+  // Set up drag and drop event listeners
+  useEffect(() => {
+    const dropZone = dropZoneRef.current;
+    if (!dropZone) return;
+
+    const handleDragOver = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setDragActive(true);
+    };
+
+    const handleDragEnter = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setDragActive(true);
+    };
+
+    const handleDragLeave = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setDragActive(false);
+    };
+
+    const handleDrop = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setDragActive(false);
+      
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFiles(e.dataTransfer.files[0]);
+      }
+    };
+
+    dropZone.addEventListener('dragover', handleDragOver);
+    dropZone.addEventListener('dragenter', handleDragEnter);
+    dropZone.addEventListener('dragleave', handleDragLeave);
+    dropZone.addEventListener('drop', handleDrop);
+
+    return () => {
+      dropZone.removeEventListener('dragover', handleDragOver);
+      dropZone.removeEventListener('dragenter', handleDragEnter);
+      dropZone.removeEventListener('dragleave', handleDragLeave);
+      dropZone.removeEventListener('drop', handleDrop);
     };
   }, []);
 
@@ -35,10 +86,12 @@ const SmartPlantScanner = () => {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         setCameraActive(true);
+        setUploadedImage(null); // Clear any uploaded image when camera is activated
+        setUploadError(null);
       }
     } catch (err) {
       console.error('Error accessing camera:', err);
-      alert('Unable to access camera. Please ensure you have granted camera permissions.');
+      setUploadError('Unable to access camera. Please ensure you have granted camera permissions.');
     }
   };
 
@@ -53,11 +106,14 @@ const SmartPlantScanner = () => {
   };
 
   const toggleScanning = () => {
-    if (!cameraActive) {
+    if (!cameraActive && !uploadedImage) {
       startCamera();
       setIsScanning(true);
     } else {
       setIsScanning(!isScanning);
+      if (!isScanning && uploadedImage) {
+        analyzeUploadedImage();
+      }
     }
   };
 
@@ -85,14 +141,76 @@ const SmartPlantScanner = () => {
   useEffect(() => {
     let intervalId;
     
-    if (isScanning) {
+    if (isScanning && cameraActive) {
       intervalId = setInterval(captureFrame, 3000); // Capture every 3 seconds
     }
     
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [isScanning]);
+  }, [isScanning, cameraActive]);
+
+  const handleFiles = (file) => {
+    setUploadError(null);
+    
+    // Check if file is an image
+    if (!file.type.match('image.*')) {
+      setUploadError('Please select an image file');
+      return;
+    }
+    
+    // Check file size (limit to 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError('Image size exceeds 10MB limit');
+      return;
+    }
+    
+    // Create a URL for the uploaded image
+    const imageUrl = URL.createObjectURL(file);
+    setUploadedImage({
+      url: imageUrl,
+      file: file,
+      name: file.name
+    });
+    
+    // Stop camera if it's active
+    if (cameraActive) {
+      stopCamera();
+    }
+    
+    // Reset scanning state
+    setIsScanning(false);
+    setDetectedDisease(null);
+  };
+  
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    handleFiles(file);
+  };
+  
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+  
+  const analyzeUploadedImage = () => {
+    if (!uploadedImage) return;
+    
+    setIsScanning(true);
+    
+    // Convert the uploaded image to a blob for API sending
+    fetch(uploadedImage.url)
+      .then(res => res.blob())
+      .then(blob => {
+        sendFrameToAPI(blob);
+      })
+      .catch(err => {
+        console.error('Error processing uploaded image:', err);
+        setIsScanning(false);
+        setUploadError('Error processing image. Please try again.');
+      });
+  };
 
   const sendFrameToAPI = async (blob) => {
     // This is a placeholder for the actual API call
@@ -114,6 +232,7 @@ const SmartPlantScanner = () => {
       };
       
       setDetectedDisease(mockResponse);
+      setIsScanning(false);
     }, 1500);
   };
 
@@ -130,35 +249,86 @@ const SmartPlantScanner = () => {
     setShowDetails(!showDetails);
   };
 
+  const resetScanner = () => {
+    setDetectedDisease(null);
+    setUploadedImage(null);
+    setIsScanning(false);
+    setCameraActive(false);
+    setUploadError(null);
+    if (videoRef.current && videoRef.current.srcObject) {
+      const tracks = videoRef.current.srcObject.getTracks();
+      tracks.forEach(track => track.stop());
+      videoRef.current.srcObject = null;
+    }
+  };
+
+  const removeUploadedImage = () => {
+    if (uploadedImage && uploadedImage.url) {
+      URL.revokeObjectURL(uploadedImage.url);
+    }
+    setUploadedImage(null);
+    setDetectedDisease(null);
+  };
+
   return (
     <section className="smart-plant-scanner">
       <div className="scanner-container">
         <h1 className="scanner-title">Smart Plant <span className="gradient-text">Scanner</span></h1>
         <p className="scanner-description">
-          Point your camera at a plant to detect diseases and get treatment recommendations.
+          Point your camera at a plant or upload an image to detect diseases and get treatment recommendations.
         </p>
         
-        <div className="camera-container">
-          <video 
-            ref={videoRef} 
-            autoPlay 
-            playsInline 
-            muted 
-            className={`camera-preview ${cameraActive ? 'active' : ''}`}
-            onCanPlay={() => videoRef.current.play()}
-          />
+        <div 
+          className={`camera-container ${dragActive ? 'drag-active' : ''}`}
+          ref={dropZoneRef}
+        >
+          {uploadedImage ? (
+            <div className="image-preview-container">
+              <img 
+                src={uploadedImage.url} 
+                alt="Uploaded plant" 
+                className="uploaded-image" 
+              />
+              <div className="image-info">
+                <span className="image-name">{uploadedImage.name}</span>
+                <button className="image-remove-btn" onClick={removeUploadedImage}>
+                  <FaTimes />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <video 
+              ref={videoRef} 
+              autoPlay 
+              playsInline 
+              muted 
+              className={`camera-preview ${cameraActive ? 'active' : ''}`}
+              onCanPlay={() => videoRef.current.play()}
+            />
+          )}
           
-          {!cameraActive && (
+          {!cameraActive && !uploadedImage && (
             <div className="camera-placeholder">
               <FaCamera className="camera-icon" />
-              <p>Tap the button below to activate camera</p>
+              <p>Use camera or drop an image here</p>
+              <div className="drop-instructions">
+                <FaUpload className="upload-icon" />
+                <span>Drag & drop an image or click to browse</span>
+              </div>
             </div>
           )}
           
           {isScanning && (
             <div className="scanning-indicator">
               <div className="scanning-animation"></div>
-              <p>Scanning plant...</p>
+              <p>Analyzing plant...</p>
+            </div>
+          )}
+          
+          {uploadError && (
+            <div className="error-message">
+              <FaExclamationTriangle />
+              <p>{uploadError}</p>
             </div>
           )}
           
@@ -214,17 +384,43 @@ const SmartPlantScanner = () => {
         
         <canvas ref={canvasRef} style={{ display: 'none' }} />
         
+        {/* Hidden file input */}
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          onChange={handleFileUpload} 
+          accept="image/*" 
+          style={{ display: 'none' }} 
+        />
+        
         <div className="scanner-controls">
-          <button 
-            className={`scan-button ${isScanning ? 'scanning' : ''}`} 
-            onClick={toggleScanning}
-          >
-            {isScanning ? 'Stop Scanning' : 'Start Scanning'}
-          </button>
+          <div className="scanner-buttons">
+            {!uploadedImage ? (
+              <button 
+                className={`scan-button ${isScanning ? 'scanning' : ''}`} 
+                onClick={toggleScanning}
+                disabled={isScanning}
+              >
+                {isScanning ? 'Analyzing...' : 'Start Camera Scanning'}
+              </button>
+            ) : (
+              <button 
+                className={`scan-button ${isScanning ? 'scanning' : ''}`} 
+                onClick={analyzeUploadedImage}
+                disabled={isScanning}
+              >
+                {isScanning ? 'Analyzing...' : 'Analyze Image'}
+              </button>
+            )}
+            
+            <button className="upload-button" onClick={triggerFileInput} disabled={isScanning}>
+              <FaUpload /> Upload Image
+            </button>
+          </div>
           
-          {cameraActive && !isScanning && (
-            <button className="camera-control-button" onClick={stopCamera}>
-              Turn Off Camera
+          {(cameraActive || uploadedImage) && !isScanning && (
+            <button className="camera-control-button" onClick={resetScanner}>
+              <FaRedo /> Reset Scanner
             </button>
           )}
         </div>
