@@ -1,14 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './styles/SmartPlantScanner.css';
-import { FaCamera, FaLeaf, FaPrescriptionBottleAlt, FaExclamationTriangle } from 'react-icons/fa';
+import { FaCamera, FaLeaf, FaPrescriptionBottleAlt, FaExclamationTriangle, FaUpload, FaImage } from 'react-icons/fa';
 
 const SmartPlantScanner = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [isScanning, setIsScanning] = useState(false);
   const [detectedDisease, setDetectedDisease] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   
   // Start camera when component mounts
   useEffect(() => {
@@ -35,6 +38,7 @@ const SmartPlantScanner = () => {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         setCameraActive(true);
+        setUploadedImage(null); // Clear any uploaded image when camera is activated
       }
     } catch (err) {
       console.error('Error accessing camera:', err);
@@ -53,7 +57,7 @@ const SmartPlantScanner = () => {
   };
 
   const toggleScanning = () => {
-    if (!cameraActive) {
+    if (!cameraActive && !uploadedImage) {
       startCamera();
       setIsScanning(true);
     } else {
@@ -85,14 +89,68 @@ const SmartPlantScanner = () => {
   useEffect(() => {
     let intervalId;
     
-    if (isScanning) {
+    if (isScanning && cameraActive) {
       intervalId = setInterval(captureFrame, 3000); // Capture every 3 seconds
     }
     
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [isScanning]);
+  }, [isScanning, cameraActive]);
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Check if file is an image
+    if (!file.type.match('image.*')) {
+      alert('Please upload an image file');
+      return;
+    }
+    
+    // Clear any previous results
+    setDetectedDisease(null);
+    setShowDetails(false);
+    
+    // Stop camera if it's active
+    if (cameraActive) {
+      stopCamera();
+    }
+    
+    // Create a URL for the uploaded image
+    const imageUrl = URL.createObjectURL(file);
+    setUploadedImage(imageUrl);
+  };
+
+  const analyzeUploadedImage = () => {
+    if (!uploadedImage) return;
+    
+    setIsAnalyzing(true);
+    
+    // Convert uploaded image to blob for API
+    const img = new Image();
+    img.onload = () => {
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
+      
+      // Set canvas dimensions to match image
+      canvas.width = img.width;
+      canvas.height = img.height;
+      
+      // Draw the image to the canvas
+      context.drawImage(img, 0, 0, canvas.width, canvas.height);
+      
+      // Convert canvas to blob
+      canvas.toBlob(blob => {
+        sendFrameToAPI(blob);
+      }, 'image/jpeg');
+    };
+    img.src = uploadedImage;
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
 
   const sendFrameToAPI = async (blob) => {
     // This is a placeholder for the actual API call
@@ -114,6 +172,7 @@ const SmartPlantScanner = () => {
       };
       
       setDetectedDisease(mockResponse);
+      setIsAnalyzing(false);
     }, 1500);
   };
 
@@ -130,35 +189,56 @@ const SmartPlantScanner = () => {
     setShowDetails(!showDetails);
   };
 
+  const clearUploadedImage = () => {
+    setUploadedImage(null);
+    setDetectedDisease(null);
+    setIsAnalyzing(false);
+  };
+
   return (
     <section className="smart-plant-scanner">
       <div className="scanner-container">
         <h1 className="scanner-title">Smart Plant <span className="gradient-text">Scanner</span></h1>
         <p className="scanner-description">
-          Point your camera at a plant to detect diseases and get treatment recommendations.
+          Point your camera at a plant or upload an image to detect diseases and get treatment recommendations.
         </p>
         
         <div className="camera-container">
-          <video 
-            ref={videoRef} 
-            autoPlay 
-            playsInline 
-            muted 
-            className={`camera-preview ${cameraActive ? 'active' : ''}`}
-            onCanPlay={() => videoRef.current.play()}
-          />
+          {uploadedImage ? (
+            <img 
+              src={uploadedImage} 
+              alt="Uploaded plant" 
+              className="uploaded-image" 
+            />
+          ) : (
+            <video 
+              ref={videoRef} 
+              autoPlay 
+              playsInline 
+              muted 
+              className={`camera-preview ${cameraActive ? 'active' : ''}`}
+              onCanPlay={() => videoRef.current.play()}
+            />
+          )}
           
-          {!cameraActive && (
+          {!cameraActive && !uploadedImage && (
             <div className="camera-placeholder">
               <FaCamera className="camera-icon" />
-              <p>Tap the button below to activate camera</p>
+              <p>Tap the button below to activate camera or upload an image</p>
             </div>
           )}
           
-          {isScanning && (
+          {isScanning && cameraActive && (
             <div className="scanning-indicator">
               <div className="scanning-animation"></div>
               <p>Scanning plant...</p>
+            </div>
+          )}
+
+          {isAnalyzing && (
+            <div className="scanning-indicator">
+              <div className="scanning-animation"></div>
+              <p>Analyzing image...</p>
             </div>
           )}
           
@@ -213,21 +293,50 @@ const SmartPlantScanner = () => {
         </div>
         
         <canvas ref={canvasRef} style={{ display: 'none' }} />
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          style={{ display: 'none' }} 
+          accept="image/*" 
+          onChange={handleImageUpload} 
+        />
         
-        <div className="scanner-controls">
-          <button 
-            className={`scan-button ${isScanning ? 'scanning' : ''}`} 
-            onClick={toggleScanning}
-          >
-            {isScanning ? 'Stop Scanning' : 'Start Scanning'}
-          </button>
-          
-          {cameraActive && !isScanning && (
-            <button className="camera-control-button" onClick={stopCamera}>
-              Turn Off Camera
-            </button>
-          )}
-        </div>
+       <div className="scanner-controls">
+  {!uploadedImage ? (
+    <>
+      <div style={{ display: 'flex', gap: '12px', width: '100%' }}>
+        <button className={`scan-button ${isScanning ? 'scanning' : ''}`} onClick={toggleScanning}>
+          {isScanning ? 'Stop Scanning' : 'Start Scanning'}
+        </button>
+
+        <button className="upload-button" onClick={triggerFileInput}>
+          <FaUpload /> Upload Plant Image
+        </button>
+      </div>
+
+      {cameraActive && !isScanning && (
+        <button className="camera-control-button" onClick={stopCamera} style={{ marginTop: '10px', width: '100%' }}>
+          Turn Off Camera
+        </button>
+      )}
+    </>
+  ) : (
+    <>
+      <button className={`scan-button ${isAnalyzing ? 'scanning' : ''}`} onClick={analyzeUploadedImage} disabled={isAnalyzing}>
+        {isAnalyzing ? 'Analyzing...' : 'Analyze Image'}
+      </button>
+
+      <button className="camera-control-button" onClick={clearUploadedImage}>
+        Clear Image
+      </button>
+
+      <button className="upload-button" onClick={triggerFileInput}>
+        <FaUpload /> Upload Different Image
+      </button>
+    </>
+  )}
+</div>
+
       </div>
     </section>
   );

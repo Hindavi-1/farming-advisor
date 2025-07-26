@@ -406,3 +406,20 @@ body.dark {
     font-size: 1.8rem;
   }
 }
+
+
+.scan-button,
+.upload-button {
+  flex: 1;
+  padding: 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
