@@ -152,29 +152,69 @@ const SmartPlantScanner = () => {
     fileInputRef.current.click();
   };
 
-  const sendFrameToAPI = async (blob) => {
-    // This is a placeholder for the actual API call
-    // In a real implementation, you would send the blob to your Flask backend
+  // const sendFrameToAPI = async (blob) => {
+  //   // This is a placeholder for the actual API call
+  //   // In a real implementation, you would send the blob to your Flask backend
     
-    // For demo purposes, we'll simulate a response after a delay
-    setTimeout(() => {
-      // Simulate a disease detection response
-      const mockResponse = {
-        disease_name: 'Tomato Late Blight',
-        suggestion: 'Apply copper-based fungicide and ensure proper spacing between plants',
-        severity: 'medium', // low, medium, high
+  //   // For demo purposes, we'll simulate a response after a delay
+  //   setTimeout(() => {
+  //     // Simulate a disease detection response
+  //     const mockResponse = {
+  //       disease_name: 'Tomato Late Blight',
+  //       suggestion: 'Apply copper-based fungicide and ensure proper spacing between plants',
+  //       severity: 'medium', // low, medium, high
+  //       details: {
+  //         description: 'Late blight is a destructive disease affecting tomatoes and potatoes, caused by the fungus Phytophthora infestans.',
+  //         cause: 'The disease is favored by cool, wet conditions and can spread rapidly through a garden or field.',
+  //         symptoms: 'Symptoms include dark, water-soaked spots on leaves that quickly enlarge to form purple-brown, oily-looking blotches.',
+  //         treatment: 'Remove and destroy infected plants, apply copper-based fungicides as a preventative measure, ensure good air circulation, and avoid overhead watering.'
+  //       }
+  //     };
+      
+  //     setDetectedDisease(mockResponse);
+  //     setIsAnalyzing(false);
+  //   }, 1500);
+  // };
+
+  const sendFrameToAPI = async (blob) => {
+  setIsAnalyzing(true);
+
+  try {
+    const formData = new FormData();
+    formData.append('file', blob);
+
+    const response = await fetch('http://localhost:5000/predict', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      const mappedResponse = {
+        disease_name: result.label,
+        suggestion: result.suggestion,
+        severity: result.severity,
         details: {
-          description: 'Late blight is a destructive disease affecting tomatoes and potatoes, caused by the fungus Phytophthora infestans.',
-          cause: 'The disease is favored by cool, wet conditions and can spread rapidly through a garden or field.',
-          symptoms: 'Symptoms include dark, water-soaked spots on leaves that quickly enlarge to form purple-brown, oily-looking blotches.',
-          treatment: 'Remove and destroy infected plants, apply copper-based fungicides as a preventative measure, ensure good air circulation, and avoid overhead watering.'
+          description: `Detected disease: ${result.label}. Confidence: ${(result.confidence * 100).toFixed(2)}%.`, // You can extend this with more info
+          cause: 'Not available (can be added in backend)',
+          symptoms: 'Not available (can be added in backend)',
+          treatment: result.suggestion,
         }
       };
-      
-      setDetectedDisease(mockResponse);
-      setIsAnalyzing(false);
-    }, 1500);
-  };
+
+      setDetectedDisease(mappedResponse);
+    } else {
+      alert(`Prediction error: ${result.error}`);
+    }
+  } catch (error) {
+    console.error('API call failed:', error);
+    alert('Failed to connect to backend. Make sure Flask is running.');
+  } finally {
+    setIsAnalyzing(false);
+  }
+};
+
 
   const getSeverityColor = (severity) => {
     switch(severity) {
