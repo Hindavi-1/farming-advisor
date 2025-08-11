@@ -275,7 +275,6 @@
 
 // export default CropRecommendation;
 
-
 // CropRecommendation.jsx
 import React, { useState } from "react";
 import axios from 'axios'; 
@@ -339,13 +338,22 @@ const CropRecommendation = ({ onBack }) => {
       rainfall: formData.rainfall,
     };
 
+    console.log("Sending payload:", payload); // Debug log
+
     try {
-      const response = await axios.post("http://localhost:5000/predict", payload, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        timeout: 10000, // 10 second timeout
-      });
+      // FIXED: Remove JSON.stringify() - axios handles this automatically
+      const response = await axios.post(
+        "http://localhost:5001/predict",
+        payload, // ✅ Just send the object directly
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: 10000,
+        }
+      );
+
+      console.log("Response received:", response.data); // Debug log
 
       const { predicted_crop, confidence, alternatives } = response.data;
       const cropLower = predicted_crop.toLowerCase();
@@ -363,13 +371,18 @@ const CropRecommendation = ({ onBack }) => {
       });
 
     } catch (error) {
-      console.error("Prediction failed:", error);
+      console.error("Full error object:", error); // Enhanced debug log
       
       let errorMessage = "Prediction failed. Please try again.";
       if (error.response) {
-        errorMessage = error.response.data?.error || errorMessage;
+        console.error("Error response:", error.response.data);
+        errorMessage = error.response.data?.error || `Server error: ${error.response.status}`;
       } else if (error.request) {
-        errorMessage = "Cannot connect to server. Make sure the backend is running.";
+        console.error("Error request:", error.request);
+        errorMessage = "Cannot connect to server. Make sure the backend is running on port 5000.";
+      } else {
+        console.error("Error message:", error.message);
+        errorMessage = error.message;
       }
       
       setError(errorMessage);
@@ -511,6 +524,7 @@ const CropRecommendation = ({ onBack }) => {
             <div className="error-message">
               <h3>Error</h3>
               <p>{error}</p>
+              <small>Check the browser console for more details.</small>
             </div>
           )}
 
