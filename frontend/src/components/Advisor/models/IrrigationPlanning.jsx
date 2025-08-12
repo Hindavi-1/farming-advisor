@@ -317,6 +317,8 @@
 
 import React, { useState, useEffect } from "react";
 import "../styles/irrigationStyles.css";
+// import "../styles/advisorFixes.css";
+
 import {
   FaArrowLeft,
   FaTint,
@@ -393,7 +395,7 @@ const IrrigationPlanning = ({ onBack }) => {
   useEffect(() => {
     const fetchWeatherData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/weather-data');
+        const response = await fetch('http://localhost:5003/api/weather-data');
         const data = await response.json();
         
         if (data.success) {
@@ -527,10 +529,12 @@ const IrrigationPlanning = ({ onBack }) => {
                   onChange={handleInputChange}
                   className="enhanced-range"
                 />
-                <div className="range-value highlighted">
+               
+              </div>
+               <div className="range-value highlighted">
                   {formData.fieldSize} acres
                 </div>
-              </div>
+              
             </div>
 
             {/* Current Soil Moisture */}
@@ -549,7 +553,9 @@ const IrrigationPlanning = ({ onBack }) => {
                     '--thumb-color': getMoistureColor(formData.currentMoisture)
                   }}
                 />
-                <div 
+                
+              </div>
+              <div 
                   className="range-value highlighted"
                   style={{ color: getMoistureColor(formData.currentMoisture) }}
                 >
@@ -560,8 +566,8 @@ const IrrigationPlanning = ({ onBack }) => {
                      formData.currentMoisture < 70 ? ' - Moderate' : ' - Good'}
                   </span>
                 </div>
-              </div>
             </div>
+            
 
             {/* Season */}
             <div className="form-group enhanced">
@@ -605,8 +611,9 @@ const IrrigationPlanning = ({ onBack }) => {
                       onChange={handleInputChange}
                       className="enhanced-range"
                     />
-                    <div className="range-value">{formData.temperature}°C</div>
                   </div>
+                   <div className="range-value">{formData.temperature}°C</div>
+
                 </div>
 
                 <div className="form-group enhanced half">
@@ -624,8 +631,8 @@ const IrrigationPlanning = ({ onBack }) => {
                       onChange={handleInputChange}
                       className="enhanced-range"
                     />
-                    <div className="range-value">{formData.humidity}%</div>
                   </div>
+                   <div className="range-value">{formData.humidity}%</div>
                 </div>
               </div>
             </div>

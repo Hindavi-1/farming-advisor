@@ -402,6 +402,7 @@
 
 import React, { useState } from "react";
 import "../styles/fertilizerStyles.css";
+// import "../styles/advisorFixes.css";
 import { FaArrowLeft, FaFlask, FaLeaf, FaSeedling, FaExclamationTriangle } from "react-icons/fa";
 import { GiChemicalDrop, GiSprout, GiFertilizerBag } from "react-icons/gi";
 import { MdScience, MdThermostat, MdWater } from "react-icons/md";

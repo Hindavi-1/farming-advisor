@@ -257,7 +257,7 @@
 .range-value {
   position: absolute;
   right: 0;
-  top: -5px;
+  top: 10px;
   font-weight: 700;
   color: var(--irrigation-primary);
   background: rgba(33, 150, 243, 0.15);
