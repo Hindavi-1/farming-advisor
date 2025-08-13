@@ -14,9 +14,13 @@ import {
   FaStar,
   FaBook,
   FaEnvelope,
+  FaRobot,
+  FaCrop,
+  FaCamera,
 } from "react-icons/fa";
 import { useLocation, NavLink } from "react-router-dom";
-import "./navbar.css";
+// import "./navbar.css";
+import "./nav.css";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -66,7 +70,7 @@ const Navbar = () => {
               Home
             </NavLink>
           </li>
-          <li>
+          {/* <li>
             <NavLink
               to="/about-us"
               className={isActiveLink("/about-us") ? "active" : ""}
@@ -75,21 +79,40 @@ const Navbar = () => {
               <FaInfoCircle className="nav-icon" />
               About Us
             </NavLink>
-          </li>
-          <li>
+          </li> */}
+          {/* <li>
             <NavLink
               to="/features"
               className={isActiveLink("/features") ? "active" : ""}
               onClick={() => setMenuOpen(false)}
             >
-              <FaStar className="nav-icon" />
+              ai-advisor
               Features
+            </NavLink>
+          </li> */}
+          <li>
+            <NavLink
+              to="/smart-scanner"
+              className={isActiveLink("/smart-scanner") ? "active" : ""}
+              onClick={() => setMenuOpen(false)}
+            >
+              {/* <a href="/ai-advisor">AI Advisor</a> */}
+              <FaCamera className="nav-icon" />
+            Smart-Scanner
             </NavLink>
           </li>
           <li>
-            <a href="/ai-advisor">AI Advisor</a>
+            <NavLink
+              to="/ai-advisor"
+              className={isActiveLink("/ai-advisor") ? "active" : ""}
+              onClick={() => setMenuOpen(false)}
+            >
+              {/* <a href="/ai-advisor">AI Advisor</a> */}
+              <FaRobot className="nav-icon" />
+            ai-advisor
+            </NavLink>
           </li>
-          <li>
+          {/* <li>
             <NavLink
               to="/blogs"
               className={isActiveLink("/blogs") ? "active" : ""}
@@ -98,7 +121,7 @@ const Navbar = () => {
               <FaBook className="nav-icon" />
               Blog
             </NavLink>
-          </li>
+          </li> */}
           <li>
             <NavLink
               to="/contact"

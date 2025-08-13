@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './styles/SmartPlantScanner.css';
+// import './styles/sps.css';
+
 import { FaCamera, FaLeaf, FaPrescriptionBottleAlt, FaExclamationTriangle, FaUpload, FaImage } from 'react-icons/fa';
 
 const SmartPlantScanner = () => {
