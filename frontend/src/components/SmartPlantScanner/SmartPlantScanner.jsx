@@ -184,6 +184,7 @@ const SmartPlantScanner = () => {
     formData.append('file', blob);
 
     const response = await fetch('http://localhost:5000/predict', {
+          // const response = await fetch('http://plantdiseaseprediction-production.up.railway.app/predict', {
       method: 'POST',
       body: formData,
     });
